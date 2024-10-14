@@ -87,7 +87,7 @@ stages:
         clean: all
       displayName: "iOS"
       pool: ${{ parameters.iosPool }}
-      timeoutInMinutes: 30
+      timeoutInMinutes: 120
       strategy:
         matrix:
           # create all the variables used for the matrix
