@@ -411,7 +411,7 @@ namespace Microsoft.Maui.Controls
 				HeightRequest = 16,
 				VerticalOptions = LayoutOptions.Center,
 				Margin = new Thickness(16, 0, 0, 0),
-				IsVisible = false
+				IsVisible = false,
 			};
 
 			contentGrid.Add(icon);
