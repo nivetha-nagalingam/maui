@@ -364,11 +364,8 @@ namespace Microsoft.Maui.Controls
 				},
 #if IOS || MACCATALYST
 				IgnoreSafeArea = true,
-				// HeightRequest = 200,
 #endif
 			};
-
-			// RemoveSafeArea(contentGrid);
 			
 			contentGrid.SetBinding(
 				BackgroundColorProperty,
