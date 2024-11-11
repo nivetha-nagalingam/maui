@@ -1,4 +1,5 @@
-﻿#if TEST_FAILS_ON_IOS && TEST_FAILS_ON_CATALYST
+﻿#if TEST_FAILS_ON_CATALYST
+//The test failed on MacCatalyst at App.WaitForElement("PageLoaded"), indicating that the element "PageLoaded" was not found within the timeout period.
 using NUnit.Framework;
 using UITest.Appium;
 using UITest.Core;
@@ -24,9 +25,9 @@ public class Issue11523 : _IssuesUITest
 		App.TapBackArrow();
 #endif
 #if ANDROID
-			App.Tap(AppiumQuery.ByXPath("//android.widget.ImageButton[@content-desc='Open navigation drawer']"));
+			App.WaitForElement(AppiumQuery.ByXPath("//android.widget.ImageButton[@content-desc='Open navigation drawer']"));
 #else
-		App.Tap(FlyoutIconAutomationId);
+		App.WaitForElement(FlyoutIconAutomationId);
 #endif
 	}
 }

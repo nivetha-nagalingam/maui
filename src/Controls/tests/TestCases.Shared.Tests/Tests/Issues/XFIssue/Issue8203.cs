@@ -1,4 +1,5 @@
 ﻿#if TEST_FAILS_ON_CATALYST
+//In MacCatalyst, it shows the blank page when run the test case
 using NUnit.Framework;
 using UITest.Appium;
 using UITest.Core;

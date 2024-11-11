@@ -1,4 +1,5 @@
 ﻿#if TEST_FAILS_ON_WINDOWS
+//When the sample source is run on the Windows platform, it throws an exception in ShellFlyoutItem.
 using NUnit.Framework;
 using UITest.Appium;
 using UITest.Core;
