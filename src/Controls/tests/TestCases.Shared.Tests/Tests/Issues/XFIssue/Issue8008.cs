@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿#if TEST_FAILS_ON_WINDOWS
+using NUnit.Framework;
 using UITest.Appium;
 using UITest.Core;
 
@@ -12,11 +13,11 @@ public class Issue8008 : _IssuesUITest
 
 	public override string Issue => "Removing Shell Item can cause Shell to try and set a MenuItem as the default visible item";
 
-	//[Test]
-	//[Category(UITestCategories.Shell)]
-	//[FailsOnIOS]
-	//public void RemovingShellItemCorrectlyPicksNextValidShellItemAsVisibleShellItem()
-	//{
-	//	App.WaitForElement("Success");
-	//}
+	[Test]
+	[Category(UITestCategories.Shell)]
+	public void RemovingShellItemCorrectlyPicksNextValidShellItemAsVisibleShellItem()
+	{
+		App.WaitForElement("Success");
+	}
 }
+#endif

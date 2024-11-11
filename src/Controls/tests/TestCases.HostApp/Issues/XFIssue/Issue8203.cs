@@ -18,21 +18,31 @@ namespace Maui.Controls.Sample.Issues
 				"event should have been raised twice. If not, this test has failed."
 			};
 
-			_eventRaisedCount = new Label();
+			_eventRaisedCount = new Label
+			{
+				AutomationId = "EventRaisedCount"
+			};
 
 			var layout = new StackLayout();
 			var cv = new CollectionView();
 
 			var source = new List<string> { "one", "two", "three" };
 
+			cv.ItemTemplate = new DataTemplate(() =>
+			{
+				var label = new Label();
+				label.SetBinding(Label.TextProperty, ".");
+				label.SetBinding(AutomationIdProperty, new Binding(".", stringFormat: "{0}"));
+				return label;
+			});
+
 			cv.ItemsSource = source;
 			cv.SelectionMode = SelectionMode.Multiple;
-
 			cv.SelectionChanged += SelectionChangedHandler;
 
-			layout.AddLogicalChild(instructions);
-			layout.AddLogicalChild(_eventRaisedCount);
-			layout.AddLogicalChild(cv);
+			layout.Add(instructions);
+			layout.Add(_eventRaisedCount);
+			layout.Add(cv);
 
 			Content = layout;
 		}

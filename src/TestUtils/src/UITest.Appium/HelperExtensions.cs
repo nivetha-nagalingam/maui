@@ -1630,6 +1630,26 @@ namespace UITest.Appium
 		}
 
 		/// <summary>
+		/// Navigates back in the application by simulating a tap on the platform-specific back navigation button.
+		/// </summary>
+		/// <param name="app">Represents the main gateway to interact with an app.</param>
+		public static void TapBackArrow(this IApp app)
+		{
+			if (app is AppiumAndroidApp)
+			{
+				app.Tap(AppiumQuery.ByXPath("//android.widget.ImageButton[@content-desc='Navigate up']"));
+			}
+			else if (app is AppiumIOSApp || app is AppiumCatalystApp)
+			{
+				app.Tap(AppiumQuery.ByAccessibilityId("Back"));
+			}
+			else if (app is AppiumWindowsApp)
+			{
+				app.Tap(AppiumQuery.ByAccessibilityId("NavigationViewBackButton"));
+			}
+		}
+
+		/// <summary>
 		/// Gets the information of the system state which is supported to read as like cpu, memory, network traffic, and battery.
 		/// Functionality that's only available on Android.
 		/// </summary>
