@@ -504,5 +504,126 @@ namespace Microsoft.Maui.TestCases.Tests
 			App.WaitForElement("Picker");
 			Assert.That(App.FindElement("SelectedIndexChangedStatusLabel").GetText(), Is.EqualTo("Triggered"));
 		}
+
+		[Test]
+		[Category(UITestCategories.Picker)]
+		public void Picker_Events_Not_Raised_Without_User_Action()
+		{
+			App.WaitForElement("Options");
+			App.Tap("Options");
+
+			App.WaitForElement("Apply");
+			App.Tap("Apply");
+			App.WaitForElement("OpenedStatusLabel");
+
+			var opened = App.FindElement("OpenedStatusLabel").GetText();
+			var closed = App.FindElement("ClosedStatusLabel").GetText();
+
+			Assert.That(opened, Is.Empty);
+			Assert.That(closed, Is.Empty);
+		}
+
+
+
+		[Test]
+		[Category(UITestCategories.Picker)]
+		public void Picker_Opened_Event_Raised()
+		{
+			App.WaitForElement("Options");
+			App.Tap("Options");
+
+			App.WaitForElement("Apply");
+			App.Tap("Apply");
+
+			App.WaitForElement("Picker");
+
+			// Tap to open picker
+			App.Tap("Picker");
+			App.WaitForElement("Option 2 - Second option");
+			App.Tap("Option 2 - Second option");
+
+			// Verify Opened event label
+			App.WaitForElement("OpenedStatusLabel");
+
+			var openedText = App.FindElement("OpenedStatusLabel").GetText();
+			var closed = App.FindElement("ClosedStatusLabel").GetText();
+
+			Assert.That(openedText, Is.EqualTo("Raised"));
+			Assert.That(closed, Is.EqualTo("Raised"));
+
+		}
+
+		[Test]
+		[Category(UITestCategories.Picker)]
+		public void Picker_Opened_NotRaised_When_Disabled()
+		{
+			App.WaitForElement("Options");
+			App.Tap("Options");
+			App.WaitForElement("IsEnabledFalseRadio");
+			App.Tap("IsEnabledFalseRadio"); // turn OFF
+			App.Tap("Apply");
+
+			App.WaitForElement("Picker");
+
+			App.Tap("Picker");
+
+			var opened = App.FindElement("OpenedStatusLabel").GetText();
+
+			Assert.That(opened, Is.Empty);
+		}
+
+		[Test]
+		[Category(UITestCategories.Picker)]
+		public void Picker_Events_Not_Raised_On_Programmatic_Changes()
+		{
+			App.WaitForElement("Options");
+			App.Tap("Options");
+
+			// Programmatically change selected index via UI options
+			App.WaitForElement("SelectedIndexEntry");
+			App.ClearText("SelectedIndexEntry");
+			App.EnterText("SelectedIndexEntry", "2");
+			App.PressEnter();
+			App.Tap("Apply");
+
+			// Ensure picker did not open/close as a result
+			App.WaitForElement("OpenedStatusLabel");
+			var opened = App.FindElement("OpenedStatusLabel").GetText();
+			var closed = App.FindElement("ClosedStatusLabel").GetText();
+
+			Assert.That(opened, Is.Empty);
+			Assert.That(closed, Is.Empty);
+		}
+
+		[Test]
+		[Category(UITestCategories.Picker)]
+		public void Picker_EventLabels_Cleared_On_NavigationBack()
+		{
+			App.WaitForElement("Options");
+			App.Tap("Options");
+			App.Tap("Apply");
+			App.WaitForElement("Picker");
+
+			// Trigger events
+			App.Tap("Picker");
+			App.WaitForElement("Option 2 - Second option");
+			App.Tap("Option 2 - Second option");
+
+			// Navigate back to options and then back to main page to simulate reset
+			App.Tap("Options");
+			App.WaitForElement("Apply");
+			App.Tap("Apply");
+
+			// After navigation, labels should be cleared by NavigateToOptionsPage_Clicked
+			var opened = App.FindElement("OpenedStatusLabel").GetText();
+			var closed = App.FindElement("ClosedStatusLabel").GetText();
+			var selectedIndexChanged = App.FindElement("SelectedIndexChangedStatusLabel").GetText();
+
+			Assert.That(opened, Is.Empty);
+			Assert.That(closed, Is.Empty);
+			Assert.That(selectedIndexChanged, Is.Empty);
+		}
+
+
 	}
 }

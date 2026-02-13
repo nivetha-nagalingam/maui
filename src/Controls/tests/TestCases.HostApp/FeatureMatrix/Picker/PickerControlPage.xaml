@@ -40,7 +40,9 @@
                              VerticalTextAlignment="{Binding VerticalTextAlignment}"
                              SelectedIndexChanged="Picker_SelectedIndexChanged"
                              HeightRequest="100"
-                             AutomationId="Picker"/>
+                             AutomationId="Picker"
+                             Opened="Picker_Opened"
+                             Closed="Picker_Closed"/>
               </Grid>
 
               <!-- Selected Index -->
@@ -82,5 +84,34 @@
                      FontSize="16"
                      HorizontalTextAlignment="Center"
                      AutomationId="SelectedIndexChangedStatusLabel"/>
+
+              <!-- Opened Event -->
+              <Label Grid.Row="4"
+                     Grid.Column="0"
+                     FontSize="16"
+                     Text="Opened Event:"
+                     HorizontalTextAlignment="Center"/>
+
+              <Label Grid.Row="4"
+                     Grid.Column="1"
+                     x:Name="OpenedStatusLabel"
+                     FontSize="16"
+                     HorizontalTextAlignment="Center"
+                     AutomationId="OpenedStatusLabel"/>
+
+              <!-- Closed Event -->
+              <Label Grid.Row="5"
+                     Grid.Column="0"
+                     FontSize="16"
+                     Text="Closed Event:"
+                     HorizontalTextAlignment="Center"/>
+
+              <Label Grid.Row="5"
+                     Grid.Column="1"
+                     x:Name="ClosedStatusLabel"
+                     FontSize="16"
+                     HorizontalTextAlignment="Center"
+                     AutomationId="ClosedStatusLabel"/>
+
        </Grid>
 </ContentPage>

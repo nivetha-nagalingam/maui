@@ -26,11 +26,24 @@ public partial class PickerControlMainPage : ContentPage
 	{
 		_viewModel.ResetToDefaults();
 		await Navigation.PushAsync(new PickerOptionsPage(_viewModel));
+		OpenedStatusLabel.Text = string.Empty;
+		ClosedStatusLabel.Text = string.Empty;
+
 		SelectedIndexChangedStatusLabel.Text = string.Empty;
 	}
 
 	private void Picker_SelectedIndexChanged(object sender, EventArgs e)
 	{
 		SelectedIndexChangedStatusLabel.Text = "Triggered";
+	}
+
+	private void Picker_Opened(object sender, EventArgs e)
+	{
+		OpenedStatusLabel.Text = "Raised";
+	}
+
+	private void Picker_Closed(object sender, EventArgs e)
+	{
+		ClosedStatusLabel.Text = "Raised";
 	}
 }
