@@ -613,4 +613,106 @@ public class DatePickerFeatureTests : _GalleryUITest
 #endif
 	}
 #endif
+
+#if TEST_FAILS_ON_CATALYST
+	[Test]
+	[Category(UITestCategories.DatePicker)]
+	public void DatePicker_Events_Not_Raised_Without_User_Action()
+	{
+		App.WaitForElement("Options");
+		App.Tap("Options");
+		App.WaitForElement("Apply");
+		App.Tap("Apply");
+
+		//App.WaitForElement("OpenedStatusLabel");
+		var opened = App.FindElement("OpenedStatusLabel").GetText();
+		var closed = App.FindElement("ClosedStatusLabel").GetText();
+
+		Assert.That(opened, Is.EqualTo("Not Raised"));
+		Assert.That(closed, Is.EqualTo("Not Raised"));
+	}
+
+	[Test]
+	[Category(UITestCategories.DatePicker)]
+	public void DatePicker_Opened_Closed_Event_Raised()
+	{
+		App.WaitForElement("Options");
+		App.Tap("Options");
+		App.WaitForElement("Apply");
+		App.Tap("Apply");
+
+		App.WaitForElement("DatePickerControl");
+		App.Tap("DatePickerControl");
+
+		// Select a date (platform-specific UI may differ)
+#if ANDROID
+    App.Tap("OK");
+#elif IOS
+		App.Tap("Done");
+#endif
+		App.WaitForElement("OpenedStatusLabel");
+		var opened = App.FindElement("OpenedStatusLabel").GetText();
+
+		App.WaitForElement("ClosedStatusLabel");
+		var closed = App.FindElement("ClosedStatusLabel").GetText();
+		Assert.That(opened, Is.EqualTo("Raised"));
+
+		Assert.That(closed, Is.EqualTo("Raised"));
+	}
+
+	[Test]
+	[Category(UITestCategories.DatePicker)]
+	public void DatePicker_Opened_NotRaised_When_Disabled()
+	{
+		App.WaitForElement("Options");
+		App.Tap("Options");
+		App.WaitForElement("IsEnabledFalseRadioButton");
+		App.Tap("IsEnabledFalseRadioButton");
+		App.Tap("Apply");
+
+		App.WaitForElement("DatePickerControl");
+		App.Tap("DatePickerControl");
+
+		var opened = App.FindElement("OpenedStatusLabel").GetText();
+		Assert.That(opened, Is.EqualTo("Not Raised"));
+	}
+
+
+	[Test]
+	[Category(UITestCategories.DatePicker)]
+	public void DatePicker_FormatSet_Then_Open_Closed_Events_Raised()
+	{
+		App.WaitForElement("Options");
+		App.Tap("Options");                                    
+		App.WaitForElement("FormatEntry");                       
+		App.ClearText("FormatEntry");
+		App.EnterText("FormatEntry", "D");                       // set format value
+		App.WaitForElement("SetFormatButton");
+		App.Tap("SetFormatButton");
+		App.WaitForElement("Apply");
+		App.Tap("Apply");                                       
+
+		App.WaitForElement("DatePickerControl");
+		App.Tap("DatePickerControl");
+
+#if ANDROID
+            App.WaitForElement("OK");
+            App.Tap("OK");
+#elif IOS
+		App.WaitForElement("Done");
+		App.Tap("Done");
+#else
+            // If other platforms are enabled, add their close actions here (e.g., tapping a date cell)
+#endif
+
+		App.WaitForElement("OpenedStatusLabel");
+		var opened = App.FindElement("OpenedStatusLabel").GetText();
+		App.WaitForElement("ClosedStatusLabel");
+		var closed = App.FindElement("ClosedStatusLabel").GetText();
+
+		Assert.That(opened, Is.EqualTo("Raised"), "Opened should be raised after opening the picker.");
+		Assert.That(closed, Is.EqualTo("Raised"), "Closed should be raised after closing the picker.");
+	}
+#endif
+
 }

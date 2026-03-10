@@ -28,7 +28,9 @@
                                  MinimumDate="{Binding MinimumDate}"
                                  MaximumDate="{Binding MaximumDate}"
                                  Shadow="{Binding Shadow}"
-                                 TextColor="{Binding TextColor}"/>
+                                 TextColor="{Binding TextColor}"
+                                 Opened="DatePicker_Opened"
+                                 Closed="DatePicker_Closed"/>
               </VerticalStackLayout>
 
               <Label Text="DateSelected Event"
@@ -52,5 +54,17 @@
                      HorizontalOptions="Center"
                      AutomationId="CultureFormatLabel"
                      Margin="0,0,0,10"/>
+
+              <HorizontalStackLayout HorizontalOptions="Center">
+                     <Label Text="Opened Event : "/>
+                     <Label x:Name="OpenedStatusLabel"
+                            AutomationId="OpenedStatusLabel"/>
+
+              </HorizontalStackLayout>
+              <HorizontalStackLayout HorizontalOptions="Center">
+                     <Label Text="Closed Event : "/>
+                     <Label x:Name="ClosedStatusLabel"
+                            AutomationId="ClosedStatusLabel"/>
+              </HorizontalStackLayout>
        </VerticalStackLayout>
 </ContentPage>

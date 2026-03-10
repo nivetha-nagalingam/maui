@@ -38,6 +38,8 @@ public partial class DatePickerMainControlPage : ContentPage
 		// Reset culture to default when navigating to options page
 		_viewModel.Culture = System.Globalization.CultureInfo.CurrentCulture;
 
+		OpenedStatusLabel.Text = "Not Raised";
+		ClosedStatusLabel.Text = "Not Raised";
 		BindingContext = _viewModel = new DatePickerViewModel();
 		await Navigation.PushAsync(new DatePickerOptionsPage(_viewModel));
 	}
@@ -65,5 +67,14 @@ public partial class DatePickerMainControlPage : ContentPage
 			OldDateSelectedLabel.Text = e.OldDate.ToString();
 			NewDateSelectedLabel.Text = e.NewDate.ToString();
 		}
+	}
+
+	private void DatePicker_Opened(object sender, EventArgs e)
+	{
+		OpenedStatusLabel.Text = "Raised";
+	}
+	private void DatePicker_Closed(object sender, EventArgs e)
+	{
+		ClosedStatusLabel.Text = "Raised";
 	}
 }
