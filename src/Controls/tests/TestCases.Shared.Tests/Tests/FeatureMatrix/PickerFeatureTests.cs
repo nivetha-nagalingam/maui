@@ -562,7 +562,7 @@ namespace Microsoft.Maui.TestCases.Tests
 		App.WaitForElement("Done");
 		App.Tap("Done");
 #elif WINDOWS
-		App.Tap("Picker");
+		App.Tap("Option 2 - Second option");
 #endif
 
 			// Verify Opened event label
