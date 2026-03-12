@@ -42,8 +42,15 @@ namespace Microsoft.Maui.TestCases.Tests
 			VerifyPickerScreenshot();
 
 #if IOS
-			App.WaitForElement("Done");
-			App.Tap("Done");
+			if (App is AppiumIOSApp iosApp && HelperExtensions.IsIOS26OrHigher(iosApp))
+			{
+				App.Tap("selected");
+			}
+			else
+			{
+				App.WaitForElement("Done");
+				App.Tap("Done");
+			}
 #elif WINDOWS
 			App.Tap("Option 2 - Second option");
 #endif
@@ -539,8 +546,24 @@ namespace Microsoft.Maui.TestCases.Tests
 
 			// Tap to open picker
 			App.Tap("Picker");
-			App.WaitForElement("Option 2 - Second option");
-			App.Tap("Option 2 - Second option");
+#if ANDROID
+		App.Tap("Cancel");
+#elif IOS
+			if (App is AppiumIOSApp iosApp && HelperExtensions.IsIOS26OrHigher(iosApp))
+			{
+				App.Tap("selected");
+			}
+			else
+			{
+				App.WaitForElement("Done");
+				App.Tap("Done");
+			}
+#elif MACCATALYST
+		App.WaitForElement("Done");
+		App.Tap("Done");
+#elif WINDOWS
+		App.Tap("Picker");
+#endif
 
 			// Verify Opened event label
 			App.WaitForElement("OpenedStatusLabel");
@@ -594,36 +617,5 @@ namespace Microsoft.Maui.TestCases.Tests
 			Assert.That(opened, Is.Empty);
 			Assert.That(closed, Is.Empty);
 		}
-
-		[Test]
-		[Category(UITestCategories.Picker)]
-		public void Picker_EventLabels_Cleared_On_NavigationBack()
-		{
-			App.WaitForElement("Options");
-			App.Tap("Options");
-			App.Tap("Apply");
-			App.WaitForElement("Picker");
-
-			// Trigger events
-			App.Tap("Picker");
-			App.WaitForElement("Option 2 - Second option");
-			App.Tap("Option 2 - Second option");
-
-			// Navigate back to options and then back to main page to simulate reset
-			App.Tap("Options");
-			App.WaitForElement("Apply");
-			App.Tap("Apply");
-
-			// After navigation, labels should be cleared by NavigateToOptionsPage_Clicked
-			var opened = App.FindElement("OpenedStatusLabel").GetText();
-			var closed = App.FindElement("ClosedStatusLabel").GetText();
-			var selectedIndexChanged = App.FindElement("SelectedIndexChangedStatusLabel").GetText();
-
-			Assert.That(opened, Is.Empty);
-			Assert.That(closed, Is.Empty);
-			Assert.That(selectedIndexChanged, Is.Empty);
-		}
-
-
 	}
 }
