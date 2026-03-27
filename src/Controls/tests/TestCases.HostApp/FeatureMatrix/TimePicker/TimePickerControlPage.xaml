@@ -11,13 +11,14 @@
                            AutomationId="Options"/>
        </ContentPage.ToolbarItems>
 
-       <Grid RowDefinitions="*,Auto,Auto,Auto"
+       <Grid RowDefinitions="*,Auto,Auto,Auto,Auto,Auto"
              ColumnDefinitions="0.5*,0.5*">
               <Grid x:Name="TimePickerGrid"
                     Grid.Row="0"
                     Grid.ColumnSpan="2"
                     VerticalOptions="Center">
-                     <TimePicker AutomationId="TimePickerControl"
+                     <TimePicker x:Name="TimePickerControl"
+                                 AutomationId="TimePickerControl"
                                  CharacterSpacing="{Binding CharacterSpacing}"
                                  FlowDirection="{Binding FlowDirection}"
                                  Format="{Binding Format}"
@@ -29,7 +30,9 @@
                                  Shadow="{Binding Shadow}"
                                  Time="{Binding Time}"
                                  TimeSelected="TimePicker_TimeSelected"
-                                 TextColor="{Binding TextColor}"/>
+                                 TextColor="{Binding TextColor}"
+                                 Opened="TimePicker_Opened"
+                                 Closed="TimePicker_Closed"/>
               </Grid>
 
               <Label Grid.Row="1"
@@ -58,6 +61,27 @@
                      Grid.Column="1"
                      x:Name="CultureFormatLabel"
                      AutomationId="CultureFormatLabel"
-                     Margin="0,0,0,50"/>
+                     Margin="0,0,0,30"/>
+                     
+              <!-- Events -->
+              <Label Grid.Row="4"
+                     Grid.Column="0"
+                     HorizontalOptions="Center"
+                     Text="Opened Event:"/>
+              <Label Grid.Row="4"
+                     Grid.Column="1"
+                     x:Name="OpenedStatusLabel"
+                     AutomationId="OpenedStatusLabel"
+                     Margin="0,0,0,10"/>
+
+              <Label Grid.Row="5"
+                     Grid.Column="0"
+                     HorizontalOptions="Center"
+                     Text="Closed Event:"/>
+              <Label Grid.Row="5"
+                     Grid.Column="1"
+                     x:Name="ClosedStatusLabel"
+                     AutomationId="ClosedStatusLabel"
+                     Margin="0,0,0,10"/>
        </Grid>
 </ContentPage>

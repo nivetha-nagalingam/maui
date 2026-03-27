@@ -526,4 +526,119 @@ public class TimePickerFeatureTests : _GalleryUITest
 		VerifyScreenshot(tolerance: 0.5, retryTimeout: TimeSpan.FromSeconds(2));
 	}
 #endif
+
+#if TEST_FAILS_ON_CATALYST
+	[Test]
+	[Category(UITestCategories.TimePicker)]
+	public void TimePicker_Opened_Event_Raised()
+	{
+		App.WaitForElement("TimePickerControl");
+		App.Tap("TimePickerControl");
+#if ANDROID
+		App.WaitForElement("OK");
+		App.Tap("OK");
+#elif IOS
+		if (App is AppiumIOSApp iosApp && HelperExtensions.IsIOS26OrHigher(iosApp))
+		{
+			App.Tap("selected");
+		}
+		else
+		{
+			App.WaitForElement("Done");
+			App.Tap("Done");
+		}
+#elif WINDOWS
+        App.WaitForElement("AcceptButton");
+        App.Tap("AcceptButton");
+#endif
+		var opened = App.FindElement("OpenedStatusLabel").GetText();
+		var closed = App.FindElement("ClosedStatusLabel").GetText();
+
+		Assert.That(opened, Is.EqualTo("Raised"));
+		Assert.That(closed, Is.EqualTo("Raised"));
+	}
+
+	[Test]
+	[Category(UITestCategories.TimePicker)]
+	public void TimePicker_Events_Not_Raised_On_Programmatic_Change()
+	{
+		App.WaitForElement("Options");
+		App.Tap("Options");
+		App.WaitForElement("TimeEntry");
+		App.ClearText("TimeEntry");
+		App.EnterText("TimeEntry", "08:00");
+		App.PressEnter();
+		App.Tap("Apply");
+		var opened = App.FindElement("OpenedStatusLabel").GetText();
+		var closed = App.FindElement("ClosedStatusLabel").GetText();
+
+		Assert.That(opened, Is.Empty);
+		Assert.That(closed, Is.Empty);
+	}
+
+	[Test]
+	[Category(UITestCategories.TimePicker)]
+	public void TimePicker_Disabled_Should_Not_Open()
+	{
+		App.WaitForElement("Options");
+		App.Tap("Options");
+		App.WaitForElement("IsEnabledFalseButton");
+		App.Tap("IsEnabledFalseButton");
+		App.Tap("Apply");
+		App.WaitForElement("TimePickerControl");
+		App.Tap("TimePickerControl");
+		var opened = App.FindElement("OpenedStatusLabel").GetText();
+		Assert.That(opened, Is.Empty);
+	}
+
+
+	[Test]
+	[Category(UITestCategories.TimePicker)]
+	public void TimePicker_FormatSet_Then_Open_Closed_Events_Raised()
+	{
+		App.WaitForElement("Options");
+		App.Tap("Options");
+
+		App.WaitForElement("FormatEntry");
+		App.ClearText("FormatEntry");
+		App.EnterText("FormatEntry", "t"); // short time format
+		App.WaitForElement("SetFormatButton");
+		App.Tap("SetFormatButton");
+
+		App.WaitForElement("Apply");
+		App.Tap("Apply");
+
+		App.WaitForElement("TimePickerControl");
+		App.Tap("TimePickerControl");
+
+#if ANDROID
+		App.WaitForElement("OK");
+		App.Tap("OK");
+
+#elif IOS
+    // iOS 26+ changed TimePicker UI (no Done button)
+    if (App is AppiumIOSApp iosApp && HelperExtensions.IsIOS26OrHigher(iosApp))
+    {
+        // In iOS 26+, selecting the highlighted picker row auto‑confirms
+        App.Tap("selected");
+    }
+    else
+    {
+        App.WaitForElement("Done");
+        App.Tap("Done");
+    }
+
+#elif WINDOWS
+    App.Tap("AcceptButton");
+#endif
+		App.WaitForElement("OpenedStatusLabel");
+		var opened = App.FindElement("OpenedStatusLabel").GetText();
+
+		App.WaitForElement("ClosedStatusLabel");
+		var closed = App.FindElement("ClosedStatusLabel").GetText();
+
+		Assert.That(opened, Is.EqualTo("Raised"));
+		Assert.That(closed, Is.EqualTo("Raised"));
+	}
+#endif
 }

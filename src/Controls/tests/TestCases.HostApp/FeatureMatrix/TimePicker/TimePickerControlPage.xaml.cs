@@ -41,6 +41,8 @@ public partial class TimePickerControlMainPage : ContentPage
 		_viewModel.Culture = System.Globalization.CultureInfo.CurrentCulture;
 
 		BindingContext = _viewModel = new TimePickerViewModel();
+		OpenedStatusLabel.Text = string.Empty;
+		ClosedStatusLabel.Text = string.Empty;
 		ReInitializeTimePicker();
 		await Navigation.PushAsync(new TimePickerOptionsPage(_viewModel));
 	}
@@ -64,6 +66,9 @@ public partial class TimePickerControlMainPage : ContentPage
 		timePicker.SetBinding(TimePicker.TimeProperty, new Binding(nameof(TimePickerViewModel.Time)));
 		timePicker.TimeSelected += TimePicker_TimeSelected;
 		timePicker.SetBinding(TimePicker.TextColorProperty, new Binding(nameof(TimePickerViewModel.TextColor)));
+
+		timePicker.Opened += TimePicker_Opened;
+		timePicker.Closed += TimePicker_Closed;
 
 		// Add property changed handlers for culture/time updates
 		timePicker.PropertyChanged += (s, e) =>
@@ -104,5 +109,15 @@ public partial class TimePickerControlMainPage : ContentPage
 			NewTimeSelectedLabel.Text = e.NewTime.ToString();
 			OldTimeSelectedLabel.Text = e.OldTime.ToString();
 		}
+	}
+
+	private void TimePicker_Opened(object sender, EventArgs e)
+	{
+		OpenedStatusLabel.Text = "Raised";
+	}
+
+	private void TimePicker_Closed(object sender, EventArgs e)
+	{
+		ClosedStatusLabel.Text = "Raised";
 	}
 }
