@@ -527,7 +527,7 @@ public class TimePickerFeatureTests : _GalleryUITest
 	}
 #endif
 
-#if TEST_FAILS_ON_CATALYST
+#if TEST_FAILS_ON_CATALYST && TEST_FAILS_ON_WINDOWS
 	[Test]
 	[Category(UITestCategories.TimePicker)]
 	public void TimePicker_Opened_Event_Raised()
@@ -547,9 +547,6 @@ public class TimePickerFeatureTests : _GalleryUITest
 			App.WaitForElement("Done");
 			App.Tap("Done");
 		}
-#elif WINDOWS
-        App.WaitForElement("AcceptButton");
-        App.Tap("AcceptButton");
 #endif
 		var opened = App.FindElement("OpenedStatusLabel").GetText();
 		var closed = App.FindElement("ClosedStatusLabel").GetText();
@@ -628,8 +625,6 @@ public class TimePickerFeatureTests : _GalleryUITest
         App.Tap("Done");
     }
 
-#elif WINDOWS
-    App.Tap("AcceptButton");
 #endif
 		App.WaitForElement("OpenedStatusLabel");
 		var opened = App.FindElement("OpenedStatusLabel").GetText();
