@@ -114,6 +114,13 @@ public class DatePickerFeatureTests : _GalleryUITest
 		App.Tap("SetDateButton");
 		App.WaitForElement("Apply");
 		App.Tap("Apply");
+
+		var newDateText = App.WaitForElement("NewDateSelectedLabel").GetText();
+		var oldDateText = App.WaitForElement("OldDateSelectedLabel").GetText();
+
+		Assert.That(newDateText, Is.Not.Empty);
+		Assert.That(oldDateText, Is.Not.Empty);
+
 		VerifyScreenshot(tolerance: 0.5, retryTimeout: TimeSpan.FromSeconds(2));
 	}
 
@@ -614,36 +621,9 @@ public class DatePickerFeatureTests : _GalleryUITest
 	}
 #endif
 
-#if TEST_FAILS_ON_CATALYST
-	[Test]
-	[Category(UITestCategories.DatePicker)]
-	public void DatePicker_Events_Not_Raised_Without_User_Action()
+
+	private void ConfirmDatePickerSelection()
 	{
-		App.WaitForElement("Options");
-		App.Tap("Options");
-		App.WaitForElement("Apply");
-		App.Tap("Apply");
-
-		var opened = App.FindElement("OpenedStatusLabel").GetText();
-		var closed = App.FindElement("ClosedStatusLabel").GetText();
-
-		Assert.That(opened, Is.EqualTo("Not Raised"));
-		Assert.That(closed, Is.EqualTo("Not Raised"));
-	}
-
-	[Test]
-	[Category(UITestCategories.DatePicker)]
-	public void DatePicker_Opened_Closed_Event_Raised()
-	{
-		App.WaitForElement("Options");
-		App.Tap("Options");
-		App.WaitForElement("Apply");
-		App.Tap("Apply");
-
-		App.WaitForElement("DatePickerControl");
-		App.Tap("DatePickerControl");
-
-		// Select a date (platform-specific UI may differ)
 #if ANDROID
 		App.Tap("OK");
 #elif IOS
@@ -659,17 +639,48 @@ public class DatePickerFeatureTests : _GalleryUITest
 #elif WINDOWS
 		App.Tap("DatePickerControl");
 #endif
-		App.WaitForElement("OpenedStatusLabel");
-		var opened = App.FindElement("OpenedStatusLabel").GetText();
+	}
 
-		App.WaitForElement("ClosedStatusLabel");
-		var closed = App.FindElement("ClosedStatusLabel").GetText();
+
+#if TEST_FAILS_ON_CATALYST //Issue Link : https://github.com/dotnet/maui/issues/34848
+	[Test, Order(30)]
+	[Category(UITestCategories.DatePicker)]
+	public void DatePicker_Events_Not_Raised_Without_User_Action()
+	{
+		App.WaitForElement("Options");
+		App.Tap("Options");
+		App.WaitForElement("Apply");
+		App.Tap("Apply");
+
+		var opened = App.WaitForElement("OpenedStatusLabel").GetText();
+		var closed = App.WaitForElement("ClosedStatusLabel").GetText();
+
+		Assert.That(opened, Is.EqualTo("Not Raised"));
+		Assert.That(closed, Is.EqualTo("Not Raised"));
+	}
+
+	[Test, Order(31)]
+	[Category(UITestCategories.DatePicker)]
+	public void DatePicker_Opened_Closed_Event_Raised()
+	{
+		App.WaitForElement("Options");
+		App.Tap("Options");
+		App.WaitForElement("Apply");
+		App.Tap("Apply");
+
+		App.WaitForElement("DatePickerControl");
+		App.Tap("DatePickerControl");
+		ConfirmDatePickerSelection();
+
+		var opened = App.WaitForElement("OpenedStatusLabel").GetText();
+
+		var closed = App.WaitForElement("ClosedStatusLabel").GetText();
 		Assert.That(opened, Is.EqualTo("Raised"));
 
 		Assert.That(closed, Is.EqualTo("Raised"));
 	}
 
-	[Test]
+	[Test, Order(32)]
 	[Category(UITestCategories.DatePicker)]
 	public void DatePicker_Opened_NotRaised_When_Disabled()
 	{
@@ -682,12 +693,12 @@ public class DatePickerFeatureTests : _GalleryUITest
 		App.WaitForElement("DatePickerControl");
 		App.Tap("DatePickerControl");
 
-		var opened = App.FindElement("OpenedStatusLabel").GetText();
+		var opened = App.WaitForElement("OpenedStatusLabel").GetText();
 		Assert.That(opened, Is.EqualTo("Not Raised"));
 	}
 
 
-	[Test]
+	[Test, Order(33)]
 	[Category(UITestCategories.DatePicker)]
 	public void DatePicker_FormatSet_Then_Open_Closed_Events_Raised()
 	{
@@ -703,29 +714,10 @@ public class DatePickerFeatureTests : _GalleryUITest
 
 		App.WaitForElement("DatePickerControl");
 		App.Tap("DatePickerControl");
+		ConfirmDatePickerSelection();
 
-#if ANDROID
-        App.WaitForElement("OK");
-        App.Tap("OK");
-#elif IOS
-		if (App is AppiumIOSApp iosApp && HelperExtensions.IsIOS26OrHigher(iosApp))
-		{
-			App.Tap("selected");
-		}
-		else
-		{
-			App.WaitForElement("Done");
-			App.Tap("Done");
-		}
-
-#elif WINDOWS
-		App.Tap("DatePickerControl");
-#endif
-
-		App.WaitForElement("OpenedStatusLabel");
-		var opened = App.FindElement("OpenedStatusLabel").GetText();
-		App.WaitForElement("ClosedStatusLabel");
-		var closed = App.FindElement("ClosedStatusLabel").GetText();
+		var opened = App.WaitForElement("OpenedStatusLabel").GetText();
+		var closed = App.WaitForElement("ClosedStatusLabel").GetText();
 
 		Assert.That(opened, Is.EqualTo("Raised"));
 		Assert.That(closed, Is.EqualTo("Raised"));

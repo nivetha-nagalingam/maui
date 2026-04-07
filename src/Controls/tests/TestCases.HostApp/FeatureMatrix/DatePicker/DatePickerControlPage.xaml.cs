@@ -64,8 +64,8 @@ public partial class DatePickerMainControlPage : ContentPage
 	{
 		if (e.OldDate.Value.Date != DateTime.Now.Date && e.NewDate != e.OldDate)
 		{
-			OldDateSelectedLabel.Text = e.OldDate.ToString();
-			NewDateSelectedLabel.Text = e.NewDate.ToString();
+			OldDateSelectedLabel.Text = ((DateTime)e.OldDate).ToString("M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+			NewDateSelectedLabel.Text = ((DateTime)e.NewDate).ToString("M/d/yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
 		}
 	}
 
