@@ -14,6 +14,30 @@ namespace Microsoft.Maui.TestCases.Tests
 		{
 		}
 
+		public void DismissPicker()
+		{
+#if ANDROID
+			App.WaitForElement("Cancel");
+			App.Tap("Cancel");
+#elif IOS
+			if (App is AppiumIOSApp iosApp && HelperExtensions.IsIOS26OrHigher(iosApp))
+			{
+				App.Tap("selected");
+			}
+			else
+			{
+				App.WaitForElement("Done");
+				App.Tap("Done");
+			}
+#elif MACCATALYST
+			App.WaitForElement("Done");
+			App.Tap("Done");
+#elif WINDOWS
+			App.WaitForElement("Option 2 - Second option");
+			App.Tap("Option 2 - Second option");
+#endif
+		}
+
 		public void VerifyPickerScreenshot()
 		{
 #if WINDOWS
@@ -512,7 +536,7 @@ namespace Microsoft.Maui.TestCases.Tests
 			Assert.That(App.FindElement("SelectedIndexChangedStatusLabel").GetText(), Is.EqualTo("Triggered"));
 		}
 
-		[Test]
+		[Test, Order(28)]
 		[Category(UITestCategories.Picker)]
 		public void Picker_Events_Not_Raised_Without_User_Action()
 		{
@@ -522,17 +546,15 @@ namespace Microsoft.Maui.TestCases.Tests
 			App.WaitForElement("Apply");
 			App.Tap("Apply");
 			App.WaitForElement("OpenedStatusLabel");
-
 			var opened = App.FindElement("OpenedStatusLabel").GetText();
+			App.WaitForElement("ClosedStatusLabel");
 			var closed = App.FindElement("ClosedStatusLabel").GetText();
 
 			Assert.That(opened, Is.Empty);
 			Assert.That(closed, Is.Empty);
 		}
 
-
-
-		[Test]
+		[Test, Order(29)]
 		[Category(UITestCategories.Picker)]
 		public void Picker_Opened_Event_Raised()
 		{
@@ -546,29 +568,12 @@ namespace Microsoft.Maui.TestCases.Tests
 
 			// Tap to open picker
 			App.Tap("Picker");
-#if ANDROID
-		App.Tap("Cancel");
-#elif IOS
-			if (App is AppiumIOSApp iosApp && HelperExtensions.IsIOS26OrHigher(iosApp))
-			{
-				App.Tap("selected");
-			}
-			else
-			{
-				App.WaitForElement("Done");
-				App.Tap("Done");
-			}
-#elif MACCATALYST
-		App.WaitForElement("Done");
-		App.Tap("Done");
-#elif WINDOWS
-		App.Tap("Option 2 - Second option");
-#endif
+			DismissPicker();
 
 			// Verify Opened event label
 			App.WaitForElement("OpenedStatusLabel");
-
 			var openedText = App.FindElement("OpenedStatusLabel").GetText();
+			App.WaitForElement("ClosedStatusLabel");
 			var closed = App.FindElement("ClosedStatusLabel").GetText();
 
 			Assert.That(openedText, Is.EqualTo("Raised"));
@@ -576,7 +581,7 @@ namespace Microsoft.Maui.TestCases.Tests
 
 		}
 
-		[Test]
+		[Test, Order(30)]
 		[Category(UITestCategories.Picker)]
 		public void Picker_Opened_NotRaised_When_Disabled()
 		{
@@ -589,13 +594,15 @@ namespace Microsoft.Maui.TestCases.Tests
 			App.WaitForElement("Picker");
 
 			App.Tap("Picker");
-
+			App.WaitForElement("OpenedStatusLabel");
 			var opened = App.FindElement("OpenedStatusLabel").GetText();
-
+			App.WaitForElement("ClosedStatusLabel");
+			var closed = App.FindElement("ClosedStatusLabel").GetText();
 			Assert.That(opened, Is.Empty);
+			Assert.That(closed, Is.Empty);
 		}
 
-		[Test]
+		[Test, Order(31)]
 		[Category(UITestCategories.Picker)]
 		public void Picker_Events_Not_Raised_On_Programmatic_Changes()
 		{
@@ -612,6 +619,7 @@ namespace Microsoft.Maui.TestCases.Tests
 			// Ensure picker did not open/close as a result
 			App.WaitForElement("OpenedStatusLabel");
 			var opened = App.FindElement("OpenedStatusLabel").GetText();
+			App.WaitForElement("ClosedStatusLabel");
 			var closed = App.FindElement("ClosedStatusLabel").GetText();
 
 			Assert.That(opened, Is.Empty);
