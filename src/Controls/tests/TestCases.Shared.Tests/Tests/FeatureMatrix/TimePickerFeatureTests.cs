@@ -15,6 +15,24 @@ public class TimePickerFeatureTests : _GalleryUITest
 	{
 	}
 
+	public void DismissTimePicker()
+    {
+#if ANDROID
+        App.WaitForElement("OK");
+        App.Tap("OK");
+#elif IOS
+        if (App is AppiumIOSApp iosApp && HelperExtensions.IsIOS26OrHigher(iosApp))
+        {
+            App.Tap("selected");
+        }
+        else
+        {
+            App.WaitForElement("Done");
+            App.Tap("Done");
+        }
+#endif
+	}
+
 #if TEST_FAILS_ON_IOS // Issue Link - https://github.com/dotnet/maui/issues/30837
 
 #if TEST_FAILS_ON_CATALYST
@@ -528,34 +546,26 @@ public class TimePickerFeatureTests : _GalleryUITest
 #endif
 
 #if TEST_FAILS_ON_CATALYST && TEST_FAILS_ON_WINDOWS
-	[Test]
+	[Test,Order(24)]
 	[Category(UITestCategories.TimePicker)]
 	public void TimePicker_Opened_Event_Raised()
 	{
+		App.WaitForElement("Options");
+		App.Tap("Options");
+		App.WaitForElement("Apply");
+		App.Tap("Apply");
 		App.WaitForElement("TimePickerControl");
 		App.Tap("TimePickerControl");
-#if ANDROID
-		App.WaitForElement("OK");
-		App.Tap("OK");
-#elif IOS
-		if (App is AppiumIOSApp iosApp && HelperExtensions.IsIOS26OrHigher(iosApp))
-		{
-			App.Tap("selected");
-		}
-		else
-		{
-			App.WaitForElement("Done");
-			App.Tap("Done");
-		}
-#endif
-		var opened = App.FindElement("OpenedStatusLabel").GetText();
-		var closed = App.FindElement("ClosedStatusLabel").GetText();
+		DismissTimePicker();
+
+		var opened = App.WaitForElement("OpenedStatusLabel").GetText();
+		var closed = App.WaitForElement("ClosedStatusLabel").GetText();
 
 		Assert.That(opened, Is.EqualTo("Raised"));
 		Assert.That(closed, Is.EqualTo("Raised"));
 	}
 
-	[Test]
+	[Test,Order(25)]
 	[Category(UITestCategories.TimePicker)]
 	public void TimePicker_Events_Not_Raised_On_Programmatic_Change()
 	{
@@ -566,14 +576,14 @@ public class TimePickerFeatureTests : _GalleryUITest
 		App.EnterText("TimeEntry", "08:00");
 		App.PressEnter();
 		App.Tap("Apply");
-		var opened = App.FindElement("OpenedStatusLabel").GetText();
-		var closed = App.FindElement("ClosedStatusLabel").GetText();
+		var opened = App.WaitForElement("OpenedStatusLabel").GetText();
+		var closed = App.WaitForElement("ClosedStatusLabel").GetText();
 
 		Assert.That(opened, Is.Empty);
 		Assert.That(closed, Is.Empty);
 	}
 
-	[Test]
+	[Test,Order(26)]
 	[Category(UITestCategories.TimePicker)]
 	public void TimePicker_Disabled_Should_Not_Open()
 	{
@@ -581,15 +591,18 @@ public class TimePickerFeatureTests : _GalleryUITest
 		App.Tap("Options");
 		App.WaitForElement("IsEnabledFalseButton");
 		App.Tap("IsEnabledFalseButton");
+		App.WaitForElement("Apply");
 		App.Tap("Apply");
 		App.WaitForElement("TimePickerControl");
 		App.Tap("TimePickerControl");
-		var opened = App.FindElement("OpenedStatusLabel").GetText();
+		var opened = App.WaitForElement("OpenedStatusLabel").GetText();
+		var closed = App.WaitForElement("ClosedStatusLabel").GetText();
 		Assert.That(opened, Is.Empty);
+		Assert.That(closed, Is.Empty);
 	}
 
 
-	[Test]
+	[Test,Order(27)]
 	[Category(UITestCategories.TimePicker)]
 	public void TimePicker_FormatSet_Then_Open_Closed_Events_Raised()
 	{
@@ -607,25 +620,8 @@ public class TimePickerFeatureTests : _GalleryUITest
 
 		App.WaitForElement("TimePickerControl");
 		App.Tap("TimePickerControl");
+		DismissTimePicker();
 
-#if ANDROID
-		App.WaitForElement("OK");
-		App.Tap("OK");
-
-#elif IOS
-    // iOS 26+ changed TimePicker UI (no Done button)
-    if (App is AppiumIOSApp iosApp && HelperExtensions.IsIOS26OrHigher(iosApp))
-    {
-        // In iOS 26+, selecting the highlighted picker row auto‑confirms
-        App.Tap("selected");
-    }
-    else
-    {
-        App.WaitForElement("Done");
-        App.Tap("Done");
-    }
-
-#endif
 		App.WaitForElement("OpenedStatusLabel");
 		var opened = App.FindElement("OpenedStatusLabel").GetText();
 
