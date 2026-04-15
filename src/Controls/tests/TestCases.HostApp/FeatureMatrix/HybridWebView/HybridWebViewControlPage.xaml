@@ -14,6 +14,7 @@
                      <RowDefinition Height="250"/>
                      <RowDefinition Height="Auto"/>
                      <RowDefinition Height="Auto"/>
+                     <RowDefinition Height="Auto"/>
               </Grid.RowDefinitions>
 
               <!-- Row 0: HybridWebView at the top -->
@@ -25,6 +26,9 @@
                              Shadow="{Binding Shadow}"
                              FlowDirection="{Binding FlowDirection}"
                              RawMessageReceived="OnRawMessageReceived"
+                             WebViewInitializing="OnWebViewInitializing"
+                             WebViewInitialized="OnWebViewInitialized"
+                             WebResourceRequested="OnWebResourceRequested"
                              AutomationId="HybridWebViewControl"/>
 
               <!-- Row 1: Title and Status Labels -->
@@ -218,5 +222,148 @@
                                     AutomationId="ResetButton"/>
                      </Grid>
               </VerticalStackLayout>
+
+              <!-- HybridWebView Event Status -->
+              <VerticalStackLayout Grid.Row="3"
+                                   Spacing="2"
+                                   Padding="0,2">
+
+                     <Label Text="HybridWebView Event Arguments:"
+                            FontAttributes="Bold"
+                            FontSize="12"/>
+
+                     <!-- Initializing -->
+                     <Label x:Name="WebViewInitializingLabel"
+                            Text="WebViewInitializing: Not fired"
+                            FontSize="11"
+                            AutomationId="WebViewInitializingLabel"/>
+
+                     <Label x:Name="WebViewInitializingPlatformArgsLabel"
+                            Text="Initializing PlatformArgs: null"
+                            FontSize="10"
+                            LineBreakMode="TailTruncation"
+                            AutomationId="WebViewInitializingPlatformArgsLabel"/>
+
+                     <!-- Initialized -->
+                     <Label x:Name="WebViewInitializedLabel"
+                            Text="WebViewInitialized: Not fired"
+                            FontSize="11"
+                            AutomationId="WebViewInitializedLabel"/>
+
+                     <Label x:Name="WebViewInitializedPlatformArgsLabel"
+                            Text="Initialized PlatformArgs: null"
+                            FontSize="10"
+                            LineBreakMode="TailTruncation"
+                            AutomationId="WebViewInitializedPlatformArgsLabel"/>
+
+                     <!-- WebResourceRequested -->
+                     <Label x:Name="WebResourceRequestedLabel"
+                            Text="WebResourceRequested: Not fired"
+                            FontSize="11"
+                            AutomationId="WebResourceRequestedLabel"/>
+
+                     <!-- URI (horizontal) -->
+                     <Grid ColumnSpacing="4">
+                            <Grid.ColumnDefinitions>
+                                   <ColumnDefinition Width="Auto"/>
+                                   <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="URI:"
+                                   FontSize="10"
+                                   FontAttributes="Bold"/>
+
+                            <Label Grid.Column="1"
+                                   x:Name="WebResourceRequestedUriLabel"
+                                   FontSize="10"
+                                   LineBreakMode="TailTruncation"
+                                   AutomationId="WebResourceRequestedUriLabel"/>
+                     </Grid>
+
+                     <!-- Method + Handled (same row) -->
+                     <Grid ColumnSpacing="8">
+                            <Grid.ColumnDefinitions>
+                                   <ColumnDefinition Width="Auto"/>
+                                   <ColumnDefinition Width="Auto"/>
+                                   <ColumnDefinition Width="Auto"/>
+                                   <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="Method:"
+                                   FontSize="10"
+                                   FontAttributes="Bold"/>
+
+                            <Label Grid.Column="1"
+                                   x:Name="WebResourceRequestedMethodLabel"
+                                   FontSize="10"
+                                   AutomationId="WebResourceRequestedMethodLabel"/>
+
+                            <Label Grid.Column="2"
+                                   Text="Handled:"
+                                   FontSize="10"
+                                   FontAttributes="Bold"/>
+
+                            <Label Grid.Column="3"
+                                   x:Name="WebResourceRequestedHandledLabel"
+                                   FontSize="10"
+                                   AutomationId="WebResourceRequestedHandledLabel"/>
+                     </Grid>
+
+                     <!-- Headers -->
+                     <Grid ColumnSpacing="4">
+                            <Grid.ColumnDefinitions>
+                                   <ColumnDefinition Width="Auto"/>
+                                   <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="Headers:"
+                                   FontSize="10"
+                                   FontAttributes="Bold"/>
+
+                            <Label Grid.Column="1"
+                                   x:Name="WebResourceRequestedHeadersLabel"
+                                   FontSize="10"
+                                   LineBreakMode="TailTruncation"
+                                   AutomationId="WebResourceRequestedHeadersLabel"/>
+                     </Grid>
+
+                     <!-- Query Parameters -->
+                     <Grid ColumnSpacing="4">
+                            <Grid.ColumnDefinitions>
+                                   <ColumnDefinition Width="Auto"/>
+                                   <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="Query:"
+                                   FontSize="10"
+                                   FontAttributes="Bold"/>
+
+                            <Label Grid.Column="1"
+                                   x:Name="WebResourceRequestedQueryParamsLabel"
+                                   FontSize="10"
+                                   LineBreakMode="TailTruncation"
+                                   AutomationId="WebResourceRequestedQueryParamsLabel"/>
+                     </Grid>
+
+                     <!-- Platform Args -->
+                     <Grid ColumnSpacing="4">
+                            <Grid.ColumnDefinitions>
+                                   <ColumnDefinition Width="Auto"/>
+                                   <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="Platform:"
+                                   FontSize="10"
+                                   FontAttributes="Bold"/>
+
+                            <Label Grid.Column="1"
+                                   x:Name="WebResourceRequestedPlatformArgsLabel"
+                                   FontSize="10"
+                                   LineBreakMode="TailTruncation"
+                                   AutomationId="WebResourceRequestedPlatformArgsLabel"/>
+                     </Grid>
+
+              </VerticalStackLayout>
+
        </Grid>
 </ContentPage>

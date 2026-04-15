@@ -171,4 +171,97 @@ public class HybridWebViewFeatureTests : _GalleryUITest
 		VerifyScreenshot(tolerance: 0.5, retryTimeout: TimeSpan.FromSeconds(2));
 	}
 #endif
+
+	[Test, Order(20)]
+	[Category(UITestCategories.WebView)]
+	public void Verify_WebViewInitializing_Event_And_Arguments()
+	{
+		App.WaitForElement("WebViewInitializingLabel");
+
+		var initializingText = App.FindElement("WebViewInitializingLabel").GetText();
+		Assert.That(initializingText, Does.Contain("Fired"));
+
+		var platformArgs = App.FindElement("WebViewInitializingPlatformArgsLabel").GetText();
+		Assert.That(platformArgs, Does.Not.Contain("null"));
+	}
+
+	[Test, Order(21)]
+	[Category(UITestCategories.WebView)]
+	public void Verify_WebViewInitialized_Event_And_Arguments()
+	{
+		App.WaitForElement("WebViewInitializedLabel");
+
+		var initializedText = App.FindElement("WebViewInitializedLabel").GetText();
+		Assert.That(initializedText, Does.Contain("Fired"));
+
+		var platformArgs = App.FindElement("WebViewInitializedPlatformArgsLabel").GetText();
+		Assert.That(platformArgs, Does.Not.Contain("null"));
+	}
+
+	[Test, Order(22)]
+	[Category(UITestCategories.WebView)]
+	public void Verify_WebResourceRequested_Event_Fires()
+	{
+		App.WaitForElement("WebResourceRequestedLabel");
+
+		var text = App.FindElement("WebResourceRequestedLabel").GetText();
+		Assert.That(text, Does.Contain("Fired"));
+	}
+
+	[Test, Order(23)]
+	[Category(UITestCategories.WebView)]
+	public void Verify_WebResourceRequested_Uri()
+	{
+		var uri = App.FindElement("WebResourceRequestedUriLabel").GetText();
+
+		Assert.That(uri, Is.Not.Empty);
+		Assert.That(uri, Does.Contain("app://"));
+	}
+
+	[Test, Order(24)]
+	[Category(UITestCategories.WebView)]
+	public void Verify_WebResourceRequested_Method()
+	{
+		var method = App.FindElement("WebResourceRequestedMethodLabel").GetText();
+
+		Assert.That(method, Does.Contain("GET"));
+	}
+
+	[Test, Order(25)]
+	[Category(UITestCategories.WebView)]
+	public void Verify_WebResourceRequested_Handled_IsFalse()
+	{
+		var handled = App.FindElement("WebResourceRequestedHandledLabel").GetText();
+
+		Assert.That(handled, Does.Contain("False"));
+	}
+
+	[Test, Order(26)]
+	[Category(UITestCategories.WebView)]
+	public void Verify_WebResourceRequested_Headers()
+	{
+		var headers = App.FindElement("WebResourceRequestedHeadersLabel").GetText();
+
+		Assert.That(headers, Is.Not.Empty);
+		Assert.That(headers, Does.Not.Contain("None"));
+	}
+
+	[Test, Order(27)]
+	[Category(UITestCategories.WebView)]
+	public void Verify_WebResourceRequested_QueryParameters_Default()
+	{
+		var query = App.FindElement("WebResourceRequestedQueryParamsLabel").GetText();
+
+		Assert.That(query, Does.Contain("None"));
+	}
+
+	[Test, Order(28)]
+	[Category(UITestCategories.WebView)]
+	public void Verify_WebResourceRequested_PlatformArgs()
+	{
+		var platformArgs = App.FindElement("WebResourceRequestedPlatformArgsLabel").GetText();
+
+		Assert.That(platformArgs, Does.Not.Contain("null"));
+	}
+
 }
