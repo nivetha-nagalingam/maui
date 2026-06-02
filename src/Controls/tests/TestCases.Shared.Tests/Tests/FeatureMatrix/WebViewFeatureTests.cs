@@ -351,9 +351,6 @@ public class WebViewFeatureTests : _GalleryUITest
 		App.Tap(Apply);
 		App.WaitForElementTillPageNavigationSettled(Options);
 		VerifyScreenshot(tolerance: 0.5, retryTimeout: TimeSpan.FromSeconds(2));
-		// var opacityText = App.FindElement(OpacityLabel).GetText();
-		// Assert.That(opacityText, Is.EqualTo("0.5"));
-
 	}
 
 	[Test , Order(11)]
