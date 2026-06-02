@@ -10,7 +10,7 @@
                      Clicked="NavigateToOptionsPage_Clicked"
                      AutomationId="Options"/>
     </ContentPage.ToolbarItems>
-    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
           ColumnDefinitions="0.5*, 0.5*"
           RowSpacing="10">
         <!-- WebView Control -->
@@ -21,6 +21,9 @@
                  Source="{Binding Source}"
                  Cookies="{Binding Cookies}"
                  IsVisible="{Binding IsVisible}"
+                 UserAgent="{Binding UserAgent}"
+                 Opacity="{Binding Opacity}"
+                 BackgroundColor="{Binding BackgroundColor}"
                  Navigating="OnWebViewNavigating"
                  Navigated="OnWebViewNavigated"
                  ProcessTerminated="OnWebViewProcessTerminated"
@@ -100,7 +103,7 @@
                IsVisible="{Binding IsEventStatusLabelVisible}"
                VerticalTextAlignment="Start"
                HorizontalTextAlignment="Start"
-               Margin="10,0,10,10"/>
+               Margin="5,0,5,5"/>
         <Label Grid.Row="5"
                Grid.Column="0"
                Grid.ColumnSpan="2"
@@ -109,7 +112,7 @@
                VerticalTextAlignment="Start"
                HorizontalTextAlignment="Start"
                AutomationId="NavigatingStatusLabel"
-               Margin="10,0,10,5"/>
+               Margin="5,0,5,5"/>
         <Label Grid.Row="6"
                Grid.Column="0"
                Grid.ColumnSpan="2"
@@ -118,7 +121,7 @@
                VerticalTextAlignment="Start"
                HorizontalTextAlignment="Start"
                AutomationId="NavigatedStatusLabel"
-               Margin="10,0,10,5"/>
+               Margin="5,0,5,5"/>
         <Label Grid.Row="8"
                Grid.Column="0"
                Grid.ColumnSpan="2"
@@ -127,7 +130,7 @@
                VerticalTextAlignment="Start"
                HorizontalTextAlignment="Start"
                AutomationId="ProcessTerminatedStatusLabel"
-               Margin="10,0,10,10"/>
+               Margin="5,0,5,5"/>
         <HorizontalStackLayout Grid.Row="7"
                                Grid.Column="0"
                                Grid.ColumnSpan="2">
@@ -135,11 +138,24 @@
                 Text="Cookie Status:"
                 FontSize="15"
                 FontAttributes="Bold"
-                Margin="10,0,10,5"/>
+                Margin="5,0,5,2"/>
             <Label
                 Text="{Binding CookiesDisplay}"
                 FontSize="14"
                 AutomationId="CookieStatusMainLabel"/>
+        </HorizontalStackLayout>
+        <HorizontalStackLayout Grid.Row="9"
+                               Grid.Column="0"
+                               Grid.ColumnSpan="2">
+            <Label
+                Text="User Agent:"
+                FontSize="15"
+                FontAttributes="Bold"
+                Margin="5,0,5,2"/>
+            <Label
+                Text="{Binding UserAgent}"
+                FontSize="14"
+                AutomationId="UserAgentLabel"/>
         </HorizontalStackLayout>
     </Grid>
 </ContentPage>

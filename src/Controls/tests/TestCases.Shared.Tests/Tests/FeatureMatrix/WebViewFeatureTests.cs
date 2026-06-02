@@ -23,8 +23,11 @@ public class WebViewFeatureTests : _GalleryUITest
 	public const string AddTestCookieButton = "AddTestCookieButton";
 	public const string ClearCookiesButton = "ClearCookiesButton";
 	public const string CookieStatusMainLabel = "CookieStatusMainLabel";
+	public const string UserAgentEntry = "UserAgentEntry";
+	public const string UserAgentLabel = "UserAgentLabel";
+	public const string OpacityLabel = "OpacityLabel";
 	public WebViewFeatureTests(TestDevice device)
-		: base(device)
+	 : base(device)
 	{
 	}
 
@@ -303,7 +306,7 @@ public class WebViewFeatureTests : _GalleryUITest
 	}
 
 #if TEST_FAILS_ON_WINDOWS // Issue Link: https://github.com/dotnet/maui/issues/29812
-	[Test]
+	[Test , Order(8)]
 	[Category(UITestCategories.WebView)]
 	public void VerifyWebViewWithShadow()
 	{
@@ -317,4 +320,72 @@ public class WebViewFeatureTests : _GalleryUITest
 		VerifyScreenshot(tolerance: 0.5, retryTimeout: TimeSpan.FromSeconds(2));
 	}
 #endif
+
+	[Test, Order(9)]
+	[Category(UITestCategories.WebView)]
+	public void WebView_SetUserAgent_VerifyUserAgentApplied()
+	{
+		App.WaitForElement(Options);
+		App.Tap(Options);
+		App.WaitForElement(UserAgentEntry);
+		App.ClearText(UserAgentEntry);
+		App.EnterText(UserAgentEntry, "CustomMauiAgent/1.0");
+		App.WaitForElement(HtmlSourceButton);
+		App.Tap(HtmlSourceButton);
+		App.WaitForElement(Apply);
+		App.Tap(Apply);
+		App.WaitForElementTillPageNavigationSettled(Options);
+		var userAgentText = App.FindElement(UserAgentLabel).GetText();
+		Assert.That(userAgentText, Is.EqualTo("CustomMauiAgent/1.0"));
+	}
+
+	[Test , Order(10)]
+	[Category(UITestCategories.WebView)]
+	public void WebView_SetOpacity_VerifyOpacityApplied()
+	{
+		App.WaitForElement(Options);
+		App.Tap(Options);
+		App.WaitForElement("Opacity05");
+		App.Tap("Opacity05");
+		App.WaitForElement(Apply);
+		App.Tap(Apply);
+		App.WaitForElementTillPageNavigationSettled(Options);
+		VerifyScreenshot(tolerance: 0.5, retryTimeout: TimeSpan.FromSeconds(2));
+		// var opacityText = App.FindElement(OpacityLabel).GetText();
+		// Assert.That(opacityText, Is.EqualTo("0.5"));
+
+	}
+
+	[Test , Order(11)]
+	[Category(UITestCategories.WebView)]
+	public void WebView_CancelNavigation_VerifyNavigationCancelled()
+	{
+		App.WaitForElement(Options);
+		App.Tap(Options);
+		App.WaitForElement("CancelNavigationTrue");
+		App.Tap("CancelNavigationTrue");
+		App.WaitForElement(GithubUrlButton);
+		App.Tap(GithubUrlButton);
+		App.WaitForElement(Apply);
+		App.Tap(Apply);
+		App.WaitForElementTillPageNavigationSettled(Options);
+		var navigatingText = App.FindElement(NavigatingStatusLabel).GetText();
+		Assert.That(navigatingText, Is.EqualTo("Navigation Cancelled"));
+	}
+
+	[Test , Order(12)]
+	[Category(UITestCategories.WebView)]
+	public void WebView_SetBackgroundColorRed_VerifyBackgroundColorApplied()
+	{
+		App.WaitForElement(Options);
+		App.Tap(Options);
+		App.WaitForElement("BackgroundColorRed");
+		App.Tap("BackgroundColorRed");
+		App.WaitForElement(HtmlSourceButton);
+		App.Tap(HtmlSourceButton);
+		App.WaitForElement(Apply);
+		App.Tap(Apply);
+		App.WaitForElementTillPageNavigationSettled(Options);
+		VerifyScreenshot(tolerance: 0.5, retryTimeout: TimeSpan.FromSeconds(2));
+	}
 }

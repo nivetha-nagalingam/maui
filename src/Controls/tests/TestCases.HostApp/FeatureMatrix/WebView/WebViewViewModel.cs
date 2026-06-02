@@ -20,6 +20,10 @@ public class WebViewViewModel : INotifyPropertyChanged
 	private string _processTerminatedStatus;
 	private string _jsEvaluationResult;
 	private bool _isEventStatusLabelVisible = false;
+	private string _userAgent;
+	private double _opacity = 1.0;
+	private Color _backgroundColor;
+	private bool _cancelNavigation;
 	public bool IsPageLoaded { get; set; }
 	public event PropertyChangedEventHandler PropertyChanged;
 	public WebViewViewModel()
@@ -208,6 +212,54 @@ public class WebViewViewModel : INotifyPropertyChanged
 		get => _shadow;
 		set { if (_shadow != value) { _shadow = value; OnPropertyChanged(); } }
 	}
+	public string UserAgent
+	{
+		get => _userAgent;
+		set
+		{
+			if (_userAgent != value)
+			{
+				_userAgent = value;
+				OnPropertyChanged();
+			}
+		}
+	}
+	public double Opacity
+	{
+		get => _opacity;
+		set
+		{
+			if (_opacity != value)
+			{
+				_opacity = value;
+				OnPropertyChanged();
+			}
+		}
+	}
+	public Color BackgroundColor
+	{
+		get => _backgroundColor;
+		set
+		{
+			if (_backgroundColor != value)
+			{
+				_backgroundColor = value;
+				OnPropertyChanged();
+			}
+		}
+	}
+	public bool CancelNavigation
+	{
+		get => _cancelNavigation;
+		set
+		{
+			if (_cancelNavigation != value)
+			{
+				_cancelNavigation = value;
+				OnPropertyChanged();
+			}
+		}
+	}
 	public ICommand GoBackCommand { get; }
 	public ICommand GoForwardCommand { get; }
 	public ICommand ReloadCommand { get; }
@@ -303,8 +355,8 @@ public class WebViewViewModel : INotifyPropertyChanged
 				var uri = new Uri($"https://{domain}");
 				var cookieCollection = Cookies.GetCookies(uri);
 				var visibleCookies = cookieCollection.Cast<Cookie>()
-					.Where(c => !IsSystemCookie(c.Name))
-					.ToList();
+				 .Where(c => !IsSystemCookie(c.Name))
+				 .ToList();
 				if (visibleCookies.Count == 0)
 					return $" No displayable cookies for domain: {domain}";
 				var cookieText = string.Join("\n", visibleCookies.Select(c => $"{c.Name} = {c.Value}"));
@@ -337,6 +389,13 @@ public class WebViewViewModel : INotifyPropertyChanged
 	}
 	public void OnNavigating(object sender, WebNavigatingEventArgs e)
 	{
+		if (CancelNavigation)
+		{
+			e.Cancel = true;
+			NavigatingStatus = "Navigation Cancelled";
+			return;
+		}
+
 		if (Source is HtmlWebViewSource)
 		{
 			NavigatingStatus = "Navigating to: Embedded HTML";
